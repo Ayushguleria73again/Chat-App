@@ -7,11 +7,19 @@ const getMongoURI = () => process.env.MONGODB_URI;
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-let cached = (global as any).mongoose;
-
-if (!cached) {
-    cached = (global as any).mongoose = { conn: null, promise: null };
+declare global {
+    var mongoose: {
+        conn: typeof import("mongoose") | null;
+        promise: Promise<typeof import("mongoose")> | null;
+    } | undefined;
 }
+
+// Initialize cached if it doesn't exist
+if (!global.mongoose) {
+    global.mongoose = { conn: null, promise: null };
+}
+
+const cached = global.mongoose!;
 
 async function connectDB() {
     if (cached.conn) {

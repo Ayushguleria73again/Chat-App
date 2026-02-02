@@ -14,9 +14,10 @@ export default async function Page() {
     .lean();
 
   // Serialize MongoDB objects (transform _id and Dates to strings)
-  const serializedMessages = initialMessages.map((msg: any) => ({
-    ...msg,
-    _id: msg._id.toString(),
+  const serializedMessages = initialMessages.map((msg) => ({
+    _id: String(msg._id),
+    user: msg.user,
+    text: msg.text,
     createdAt: msg.createdAt.toISOString(),
   }));
 
